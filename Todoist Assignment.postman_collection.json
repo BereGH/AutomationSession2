@@ -1,0 +1,1243 @@
+{
+	"info": {
+		"_postman_id": "f17dc8bb-a0ea-4dcb-9a46-f726f261f82c",
+		"name": "Todoist Assignment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Project",
+			"item": [
+				{
+					"name": "Create a new Project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 2xx\",function(){\r",
+									"    pm.response.to.be.success;\r",
+									"})\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"var name = pm.environment.get(\"projectName\");\r",
+									"pm.test(\"Project name is correct\",function(){\r",
+									"    pm.expect(jsonData.name).to.eql(name);\r",
+									"})\r",
+									"\r",
+									"pm.environment.set(\"projectId\",jsonData.id);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"projectName\", \"Bere\\'sProject\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-Requested-Id",
+								"value": "$(uuidgen)",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{projectName}}\"\r\n}"
+						},
+						"url": {
+							"raw": "{{baseURL}}/projects",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"projects"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "Get Active Tasks",
+					"item": [
+						{
+							"name": "Get active tasks",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const schema = {\r",
+											"    \"$schema\": \"http://json-schema.org/draft-07/schema\",\r",
+											"    \"$id\": \"http://example.com/example.json\",\r",
+											"    \"type\": \"array\",\r",
+											"    \"title\": \"The root schema\",\r",
+											"    \"description\": \"The root schema comprises the entire JSON document.\",\r",
+											"    \"default\": [],\r",
+											"    \"additionalItems\": true,\r",
+											"    \"items\": {\r",
+											"        \"$id\": \"#/items\",\r",
+											"        \"anyOf\": [\r",
+											"            {\r",
+											"                \"$id\": \"#/items/anyOf/0\",\r",
+											"                \"type\": \"object\",\r",
+											"                \"title\": \"The first anyOf schema\",\r",
+											"                \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"                \"default\": {},\r",
+											"                \"examples\": [\r",
+											"                    {\r",
+											"                        \"id\": 4682125266,\r",
+											"                        \"assigner\": 0,\r",
+											"                        \"project_id\": 2261453546,\r",
+											"                        \"section_id\": 0,\r",
+											"                        \"order\": 4,\r",
+											"                        \"content\": \"Blue oranges\",\r",
+											"                        \"completed\": false,\r",
+											"                        \"label_ids\": [],\r",
+											"                        \"priority\": 1,\r",
+											"                        \"comment_count\": 0,\r",
+											"                        \"creator\": 33137538,\r",
+											"                        \"created\": \"2021-03-23T02:57:26Z\",\r",
+											"                        \"url\": \"https://todoist.com/showTask?id=4682125266\"\r",
+											"                    }\r",
+											"                ],\r",
+											"                \"required\": [\r",
+											"                    \"id\",\r",
+											"                    \"assigner\",\r",
+											"                    \"project_id\",\r",
+											"                    \"section_id\",\r",
+											"                    \"order\",\r",
+											"                    \"content\",\r",
+											"                    \"completed\",\r",
+											"                    \"label_ids\",\r",
+											"                    \"priority\",\r",
+											"                    \"comment_count\",\r",
+											"                    \"creator\",\r",
+											"                    \"created\",\r",
+											"                    \"url\"\r",
+											"                ],\r",
+											"                \"properties\": {\r",
+											"                    \"id\": {\r",
+											"                        \"$id\": \"#/items/anyOf/0/properties/id\",\r",
+											"                        \"type\": \"integer\",\r",
+											"                        \"title\": \"The id schema\",\r",
+											"                        \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"                        \"default\": 0,\r",
+											"                        \"examples\": [\r",
+											"                            4682125266\r",
+											"                        ]\r",
+											"                    },\r",
+											"                    \"assigner\": {\r",
+											"                        \"$id\": \"#/items/anyOf/0/properties/assigner\",\r",
+											"                        \"type\": \"integer\",\r",
+											"                        \"title\": \"The assigner schema\",\r",
+											"                        \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"                        \"default\": 0,\r",
+											"                        \"examples\": [\r",
+											"                            0\r",
+											"                        ]\r",
+											"                    },\r",
+											"                    \"project_id\": {\r",
+											"                        \"$id\": \"#/items/anyOf/0/properties/project_id\",\r",
+											"                        \"type\": \"integer\",\r",
+											"                        \"title\": \"The project_id schema\",\r",
+											"                        \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"                        \"default\": 0,\r",
+											"                        \"examples\": [\r",
+											"                            2261453546\r",
+											"                        ]\r",
+											"                    },\r",
+											"                    \"section_id\": {\r",
+											"                        \"$id\": \"#/items/anyOf/0/properties/section_id\",\r",
+											"                        \"type\": \"integer\",\r",
+											"                        \"title\": \"The section_id schema\",\r",
+											"                        \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"                        \"default\": 0,\r",
+											"                        \"examples\": [\r",
+											"                            0\r",
+											"                        ]\r",
+											"                    },\r",
+											"                    \"order\": {\r",
+											"                        \"$id\": \"#/items/anyOf/0/properties/order\",\r",
+											"                        \"type\": \"integer\",\r",
+											"                        \"title\": \"The order schema\",\r",
+											"                        \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"                        \"default\": 0,\r",
+											"                        \"examples\": [\r",
+											"                            4\r",
+											"                        ]\r",
+											"                    },\r",
+											"                    \"content\": {\r",
+											"                        \"$id\": \"#/items/anyOf/0/properties/content\",\r",
+											"                        \"type\": \"string\",\r",
+											"                        \"title\": \"The content schema\",\r",
+											"                        \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"                        \"default\": \"\",\r",
+											"                        \"examples\": [\r",
+											"                            \"Blue oranges\"\r",
+											"                        ]\r",
+											"                    },\r",
+											"                    \"completed\": {\r",
+											"                        \"$id\": \"#/items/anyOf/0/properties/completed\",\r",
+											"                        \"type\": \"boolean\",\r",
+											"                        \"title\": \"The completed schema\",\r",
+											"                        \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"                        \"default\": false,\r",
+											"                        \"examples\": [\r",
+											"                            false\r",
+											"                        ]\r",
+											"                    },\r",
+											"                    \"label_ids\": {\r",
+											"                        \"$id\": \"#/items/anyOf/0/properties/label_ids\",\r",
+											"                        \"type\": \"array\",\r",
+											"                        \"title\": \"The label_ids schema\",\r",
+											"                        \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"                        \"default\": [],\r",
+											"                        \"examples\": [\r",
+											"                            []\r",
+											"                        ],\r",
+											"                        \"additionalItems\": true,\r",
+											"                        \"items\": {\r",
+											"                            \"$id\": \"#/items/anyOf/0/properties/label_ids/items\"\r",
+											"                        }\r",
+											"                    },\r",
+											"                    \"priority\": {\r",
+											"                        \"$id\": \"#/items/anyOf/0/properties/priority\",\r",
+											"                        \"type\": \"integer\",\r",
+											"                        \"title\": \"The priority schema\",\r",
+											"                        \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"                        \"default\": 0,\r",
+											"                        \"examples\": [\r",
+											"                            1\r",
+											"                        ]\r",
+											"                    },\r",
+											"                    \"comment_count\": {\r",
+											"                        \"$id\": \"#/items/anyOf/0/properties/comment_count\",\r",
+											"                        \"type\": \"integer\",\r",
+											"                        \"title\": \"The comment_count schema\",\r",
+											"                        \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"                        \"default\": 0,\r",
+											"                        \"examples\": [\r",
+											"                            0\r",
+											"                        ]\r",
+											"                    },\r",
+											"                    \"creator\": {\r",
+											"                        \"$id\": \"#/items/anyOf/0/properties/creator\",\r",
+											"                        \"type\": \"integer\",\r",
+											"                        \"title\": \"The creator schema\",\r",
+											"                        \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"                        \"default\": 0,\r",
+											"                        \"examples\": [\r",
+											"                            33137538\r",
+											"                        ]\r",
+											"                    },\r",
+											"                    \"created\": {\r",
+											"                        \"$id\": \"#/items/anyOf/0/properties/created\",\r",
+											"                        \"type\": \"string\",\r",
+											"                        \"title\": \"The created schema\",\r",
+											"                        \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"                        \"default\": \"\",\r",
+											"                        \"examples\": [\r",
+											"                            \"2021-03-23T02:57:26Z\"\r",
+											"                        ]\r",
+											"                    },\r",
+											"                    \"url\": {\r",
+											"                        \"$id\": \"#/items/anyOf/0/properties/url\",\r",
+											"                        \"type\": \"string\",\r",
+											"                        \"title\": \"The url schema\",\r",
+											"                        \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"                        \"default\": \"\",\r",
+											"                        \"examples\": [\r",
+											"                            \"https://todoist.com/showTask?id=4682125266\"\r",
+											"                        ]\r",
+											"                    }\r",
+											"                },\r",
+											"                \"additionalProperties\": true\r",
+											"            }\r",
+											"        ]\r",
+											"    }\r",
+											"}\r",
+											"pm.test(\"Status code is 2xx\", function(){\r",
+											"    pm.response.to.be.success;\r",
+											"})\r",
+											"pm.test(\"Validate schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(schema);\r",
+											"});\r",
+											"\r",
+											"const jsonData = pm.response.json();\r",
+											"const taskId = pm.environment.get(\"taskId\");\r",
+											"\r",
+											"pm.test(\"Tasks list not empty\", function(){\r",
+											"    pm.expect(jsonData.length).to.gte(1);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/tasks",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"tasks"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Wrong Project Name",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Forbidden status code\",function(){",
+											"    pm.response.to.have.status(404);",
+											"})",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.request.headers.add({",
+											"    key: \"Authorization\",",
+											"    value: \"Bearer fake_auth\"",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/tasks",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"tasks"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Create a New Task",
+					"item": [
+						{
+							"name": "Create a new task",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const schema = {\r",
+											"    \"$schema\": \"http://json-schema.org/draft-07/schema\",\r",
+											"    \"$id\": \"http://example.com/example.json\",\r",
+											"    \"type\": \"object\",\r",
+											"    \"title\": \"The root schema\",\r",
+											"    \"description\": \"The root schema comprises the entire JSON document.\",\r",
+											"    \"default\": {},\r",
+											"    \"required\": [\r",
+											"        \"id\",\r",
+											"        \"assigner\",\r",
+											"        \"project_id\",\r",
+											"        \"section_id\",\r",
+											"        \"order\",\r",
+											"        \"content\",\r",
+											"        \"completed\",\r",
+											"        \"label_ids\",\r",
+											"        \"priority\",\r",
+											"        \"comment_count\",\r",
+											"        \"creator\",\r",
+											"        \"created\",\r",
+											"        \"url\"\r",
+											"    ],\r",
+											"    \"properties\": {\r",
+											"        \"id\": {\r",
+											"            \"$id\": \"#/properties/id\",\r",
+											"            \"type\": \"integer\",\r",
+											"            \"title\": \"The id schema\",\r",
+											"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"            \"default\": 0,\r",
+											"            \"examples\": [\r",
+											"                4682125266\r",
+											"            ]\r",
+											"        },\r",
+											"        \"assigner\": {\r",
+											"            \"$id\": \"#/properties/assigner\",\r",
+											"            \"type\": \"integer\",\r",
+											"            \"title\": \"The assigner schema\",\r",
+											"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"            \"default\": 0,\r",
+											"            \"examples\": [\r",
+											"                0\r",
+											"            ]\r",
+											"        },\r",
+											"        \"project_id\": {\r",
+											"            \"$id\": \"#/properties/project_id\",\r",
+											"            \"type\": \"integer\",\r",
+											"            \"title\": \"The project_id schema\",\r",
+											"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"            \"default\": 0,\r",
+											"            \"examples\": [\r",
+											"                2261453546\r",
+											"            ]\r",
+											"        },\r",
+											"        \"section_id\": {\r",
+											"            \"$id\": \"#/properties/section_id\",\r",
+											"            \"type\": \"integer\",\r",
+											"            \"title\": \"The section_id schema\",\r",
+											"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"            \"default\": 0,\r",
+											"            \"examples\": [\r",
+											"                0\r",
+											"            ]\r",
+											"        },\r",
+											"        \"order\": {\r",
+											"            \"$id\": \"#/properties/order\",\r",
+											"            \"type\": \"integer\",\r",
+											"            \"title\": \"The order schema\",\r",
+											"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"            \"default\": 0,\r",
+											"            \"examples\": [\r",
+											"                1\r",
+											"            ]\r",
+											"        },\r",
+											"        \"content\": {\r",
+											"            \"$id\": \"#/properties/content\",\r",
+											"            \"type\": \"string\",\r",
+											"            \"title\": \"The content schema\",\r",
+											"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"            \"default\": \"\",\r",
+											"            \"examples\": [\r",
+											"                \"Blue oranges.\"\r",
+											"            ]\r",
+											"        },\r",
+											"        \"completed\": {\r",
+											"            \"$id\": \"#/properties/completed\",\r",
+											"            \"type\": \"boolean\",\r",
+											"            \"title\": \"The completed schema\",\r",
+											"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"            \"default\": false,\r",
+											"            \"examples\": [\r",
+											"                false\r",
+											"            ]\r",
+											"        },\r",
+											"        \"label_ids\": {\r",
+											"            \"$id\": \"#/properties/label_ids\",\r",
+											"            \"type\": \"array\",\r",
+											"            \"title\": \"The label_ids schema\",\r",
+											"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"            \"default\": [],\r",
+											"            \"examples\": [\r",
+											"                []\r",
+											"            ],\r",
+											"            \"additionalItems\": true,\r",
+											"            \"items\": {\r",
+											"                \"$id\": \"#/properties/label_ids/items\"\r",
+											"            }\r",
+											"        },\r",
+											"        \"priority\": {\r",
+											"            \"$id\": \"#/properties/priority\",\r",
+											"            \"type\": \"integer\",\r",
+											"            \"title\": \"The priority schema\",\r",
+											"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"            \"default\": 0,\r",
+											"            \"examples\": [\r",
+											"                1\r",
+											"            ]\r",
+											"        },\r",
+											"        \"comment_count\": {\r",
+											"            \"$id\": \"#/properties/comment_count\",\r",
+											"            \"type\": \"integer\",\r",
+											"            \"title\": \"The comment_count schema\",\r",
+											"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"            \"default\": 0,\r",
+											"            \"examples\": [\r",
+											"                0\r",
+											"            ]\r",
+											"        },\r",
+											"        \"creator\": {\r",
+											"            \"$id\": \"#/properties/creator\",\r",
+											"            \"type\": \"integer\",\r",
+											"            \"title\": \"The creator schema\",\r",
+											"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"            \"default\": 0,\r",
+											"            \"examples\": [\r",
+											"                33137538\r",
+											"            ]\r",
+											"        },\r",
+											"        \"created\": {\r",
+											"            \"$id\": \"#/properties/created\",\r",
+											"            \"type\": \"string\",\r",
+											"            \"title\": \"The created schema\",\r",
+											"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"            \"default\": \"\",\r",
+											"            \"examples\": [\r",
+											"                \"2021-03-23T02:57:26\"\r",
+											"            ]\r",
+											"        },\r",
+											"        \"url\": {\r",
+											"            \"$id\": \"#/properties/url\",\r",
+											"            \"type\": \"string\",\r",
+											"            \"title\": \"The url schema\",\r",
+											"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"            \"default\": \"\",\r",
+											"            \"examples\": [\r",
+											"                \"https://todoist.com/showTask?id=4682125266\"\r",
+											"            ]\r",
+											"        }\r",
+											"    },\r",
+											"    \"additionalProperties\": true\r",
+											"}\r",
+											"\r",
+											"pm.test(\"Validate schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(schema);\r",
+											"});\r",
+											"pm.test(\"Status code is 2xx\", function(){\r",
+											"    pm.response.to.be.success;\r",
+											"})\r",
+											"\r",
+											"var jsonData = pm.response.json();\r",
+											"var projectId = pm.environment.get(\"projectId\");\r",
+											"\r",
+											"pm.test(\"Task is correct\",function(){\r",
+											"    pm.expect(jsonData.project_id).to.eql(projectId);\r",
+											"})\r",
+											"\r",
+											"pm.environment.set(\"taskId\",jsonData.id);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"Blue oranges\",\r\n    \"project_id\": {{projectId}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/tasks",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"tasks"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Wrong fomat",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 4xx\",function(){\r",
+											"    pm.response.to.be.clientError;\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content_\": \"Yellow orange\",\r\n    \"project_id\": {{projectId}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/tasks",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"tasks"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get an Active Task",
+					"item": [
+						{
+							"name": "Get an active task",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const schema = {\r",
+											"    \"$schema\": \"http://json-schema.org/draft-07/schema\",\r",
+											"    \"$id\": \"http://example.com/example.json\",\r",
+											"    \"type\": \"object\",\r",
+											"    \"title\": \"The root schema\",\r",
+											"    \"description\": \"The root schema comprises the entire JSON document.\",\r",
+											"    \"default\": {},\r",
+											"    \"required\": [\r",
+											"        \"id\",\r",
+											"        \"assigner\",\r",
+											"        \"project_id\",\r",
+											"        \"section_id\",\r",
+											"        \"order\",\r",
+											"        \"content\",\r",
+											"        \"completed\",\r",
+											"        \"label_ids\",\r",
+											"        \"priority\",\r",
+											"        \"comment_count\",\r",
+											"        \"creator\",\r",
+											"        \"created\",\r",
+											"        \"url\"\r",
+											"    ],\r",
+											"    \"properties\": {\r",
+											"        \"id\": {\r",
+											"            \"$id\": \"#/properties/id\",\r",
+											"            \"type\": \"integer\",\r",
+											"            \"title\": \"The id schema\",\r",
+											"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"            \"default\": 0,\r",
+											"            \"examples\": [\r",
+											"                4682125266\r",
+											"            ]\r",
+											"        },\r",
+											"        \"assigner\": {\r",
+											"            \"$id\": \"#/properties/assigner\",\r",
+											"            \"type\": \"integer\",\r",
+											"            \"title\": \"The assigner schema\",\r",
+											"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"            \"default\": 0,\r",
+											"            \"examples\": [\r",
+											"                0\r",
+											"            ]\r",
+											"        },\r",
+											"        \"project_id\": {\r",
+											"            \"$id\": \"#/properties/project_id\",\r",
+											"            \"type\": \"integer\",\r",
+											"            \"title\": \"The project_id schema\",\r",
+											"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"            \"default\": 0,\r",
+											"            \"examples\": [\r",
+											"                2261453546\r",
+											"            ]\r",
+											"        },\r",
+											"        \"section_id\": {\r",
+											"            \"$id\": \"#/properties/section_id\",\r",
+											"            \"type\": \"integer\",\r",
+											"            \"title\": \"The section_id schema\",\r",
+											"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"            \"default\": 0,\r",
+											"            \"examples\": [\r",
+											"                0\r",
+											"            ]\r",
+											"        },\r",
+											"        \"order\": {\r",
+											"            \"$id\": \"#/properties/order\",\r",
+											"            \"type\": \"integer\",\r",
+											"            \"title\": \"The order schema\",\r",
+											"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"            \"default\": 0,\r",
+											"            \"examples\": [\r",
+											"                4\r",
+											"            ]\r",
+											"        },\r",
+											"        \"content\": {\r",
+											"            \"$id\": \"#/properties/content\",\r",
+											"            \"type\": \"string\",\r",
+											"            \"title\": \"The content schema\",\r",
+											"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"            \"default\": \"\",\r",
+											"            \"examples\": [\r",
+											"                \"Blue oranges.\"\r",
+											"            ]\r",
+											"        },\r",
+											"        \"completed\": {\r",
+											"            \"$id\": \"#/properties/completed\",\r",
+											"            \"type\": \"boolean\",\r",
+											"            \"title\": \"The completed schema\",\r",
+											"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"            \"default\": false,\r",
+											"            \"examples\": [\r",
+											"                false\r",
+											"            ]\r",
+											"        },\r",
+											"        \"label_ids\": {\r",
+											"            \"$id\": \"#/properties/label_ids\",\r",
+											"            \"type\": \"array\",\r",
+											"            \"title\": \"The label_ids schema\",\r",
+											"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"            \"default\": [],\r",
+											"            \"examples\": [\r",
+											"                []\r",
+											"            ],\r",
+											"            \"additionalItems\": true,\r",
+											"            \"items\": {\r",
+											"                \"$id\": \"#/properties/label_ids/items\"\r",
+											"            }\r",
+											"        },\r",
+											"        \"priority\": {\r",
+											"            \"$id\": \"#/properties/priority\",\r",
+											"            \"type\": \"integer\",\r",
+											"            \"title\": \"The priority schema\",\r",
+											"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"            \"default\": 0,\r",
+											"            \"examples\": [\r",
+											"                1\r",
+											"            ]\r",
+											"        },\r",
+											"        \"comment_count\": {\r",
+											"            \"$id\": \"#/properties/comment_count\",\r",
+											"            \"type\": \"integer\",\r",
+											"            \"title\": \"The comment_count schema\",\r",
+											"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"            \"default\": 0,\r",
+											"            \"examples\": [\r",
+											"                0\r",
+											"            ]\r",
+											"        },\r",
+											"        \"creator\": {\r",
+											"            \"$id\": \"#/properties/creator\",\r",
+											"            \"type\": \"integer\",\r",
+											"            \"title\": \"The creator schema\",\r",
+											"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"            \"default\": 0,\r",
+											"            \"examples\": [\r",
+											"                33137538\r",
+											"            ]\r",
+											"        },\r",
+											"        \"created\": {\r",
+											"            \"$id\": \"#/properties/created\",\r",
+											"            \"type\": \"string\",\r",
+											"            \"title\": \"The created schema\",\r",
+											"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"            \"default\": \"\",\r",
+											"            \"examples\": [\r",
+											"                \"2021-03-23T02:57:26Z\"\r",
+											"            ]\r",
+											"        },\r",
+											"        \"url\": {\r",
+											"            \"$id\": \"#/properties/url\",\r",
+											"            \"type\": \"string\",\r",
+											"            \"title\": \"The url schema\",\r",
+											"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+											"            \"default\": \"\",\r",
+											"            \"examples\": [\r",
+											"                \"https://todoist.com/showTask?id=4682125266\"\r",
+											"            ]\r",
+											"        }\r",
+											"    },\r",
+											"    \"additionalProperties\": true\r",
+											"}\r",
+											"\r",
+											"pm.test(\"Status code is 2xx\",function(){\r",
+											"    pm.response.to.be.success;\r",
+											"})\r",
+											"\r",
+											"pm.test(\"Validate schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(schema);\r",
+											"});\r",
+											"\r",
+											"var jsonData = pm.response.json();\r",
+											"var taskId = pm.environment.get(\"taskId\");\r",
+											"\r",
+											"\r",
+											"pm.test(\"Task is correct\",function(){\r",
+											"    pm.expect(jsonData.id).to.eql(taskId);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/tasks/{{taskId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"tasks",
+										"{{taskId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Non Existent Task",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Bad code status\",function(){\r",
+											"    pm.response.to.have.status(404)\r",
+											"})\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/tasks/tasknonexistent",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"tasks",
+										"tasknonexistent"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Update a Task",
+					"item": [
+						{
+							"name": "Update a task",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 2xx\",function(){\r",
+											"    pm.response.to.be.success;\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"Green Orange\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/tasks/{{taskId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"tasks",
+										"{{taskId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Non Existent Task",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Bad code status\",function(){\r",
+											"    pm.response.to.have.status(404)\r",
+											"})\r",
+											"\r",
+											"pm.test(\"Task not found\",()=>{\r",
+											"    pm.expect(pm.response.stream.toString()).to.contains(\"404\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Request-Id",
+										"value": "{{$randomUUID}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"red orande\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/tasks/tasknonexistent",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"tasks",
+										"tasknonexistent"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Change a Task Status to Complete",
+					"item": [
+						{
+							"name": "Change a task status to complete",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 2xx\",function(){\r",
+											"    pm.response.to.be.success;\r",
+											"})\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/tasks/{{taskId}}/close",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"tasks",
+										"{{taskId}}",
+										"close"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Non Existent Task",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Bad code status\",function(){",
+											"    pm.response.to.have.status(404)",
+											"})",
+											"",
+											"pm.test(\"Empty request\",()=>{",
+											"    pm.expect(pm.response.stream.toString()).to.contains(\"404\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Request-Id",
+										"value": "{{$randomUUID}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseURL}}/tasks/tasknonexistent/close",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"tasks",
+										"tasknonexistent",
+										"close"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Reopen a Task",
+					"item": [
+						{
+							"name": "Reopen a task",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 2xx\",function(){\r",
+											"    pm.response.to.be.success;\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/tasks/{{taskId}}/reopen",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"tasks",
+										"{{taskId}}",
+										"reopen"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Non Existent Task",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Bad code status\",function(){",
+											"    pm.response.to.have.status(404)",
+											"})",
+											"",
+											"pm.test(\"Empty request\",()=>{",
+											"    pm.expect(pm.response.stream.toString()).to.contains(\"404\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Request-Id",
+										"value": "{{$randomUUID}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/tasks/tasknonexistent/reopen",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"tasks",
+										"tasknonexistent",
+										"reopen"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Delete a Task",
+					"item": [
+						{
+							"name": "Delete a task",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 2xx\",function(){\r",
+											"    pm.response.to.be.success;\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/tasks/{{taskId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"tasks",
+										"{{taskId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Non Existent Task",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Bad code status\",function(){",
+											"    pm.response.to.have.status(404)",
+											"})",
+											"",
+											"pm.test(\"Empty request\",()=>{",
+											"    pm.expect(pm.response.stream.toString()).to.contains(\"404\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "X-Request-Id",
+										"value": "{{$randomUUID}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseURL}}/tasks/tasknonexistent",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"tasks",
+										"tasknonexistent"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"/*pm.test(\"Status code is 2xx\", function () {",
+					"    pm.response.to.be.success;",
+					"});",
+					"var id = pm.environment.get(\"taskId\");",
+					"pm.test(\"Task id is correct\", function () {",
+					"    var jsonData = pm.response.json();",
+					"    pm.expect(jsonData.id).to.eql(id);",
+					"});",
+					"pm.test(\"Response time is less than 500ms\", function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(500);",
+					"});*/"
+				]
+			}
+		}
+	]
+}
